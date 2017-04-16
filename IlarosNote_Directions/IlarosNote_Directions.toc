@@ -1,0 +1,14 @@
+﻿## Interface: 30305
+## Title: IlarosNote_Directions
+## Author: Ilaros
+## Version: 1.000
+## Notes: Liste mit Orten in Städten auf der Landkarte
+## DefaultState: enabled
+## RequiredDeps: IlarosNote
+## SavedVariables: IlarosNote_DirectionsDB
+
+enUS.lua
+koKR.lua
+zhCN.lua
+
+Directions.lua

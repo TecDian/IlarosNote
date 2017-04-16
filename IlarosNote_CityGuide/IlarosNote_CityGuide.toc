@@ -1,0 +1,18 @@
+﻿## Interface: 30305
+## Title: IlarosNote_CityGuide
+## Author: Ilaros
+## Version: 1.000
+## Notes: Liste mit wichtigen Orten auf der Landkarte
+## DefaultState: enabled
+## RequiredDeps: IlarosNote
+## OptionalDeps: IlarosNavi
+## SavedVariables: IlarosNote_CityGuideDB
+
+Locales\enUS.lua
+Locales\deDE.lua
+Locales\frFR.lua
+Locales\koKR.lua
+Locales\ruRU.lua
+Locales\zhTW.lua
+
+addon.lua

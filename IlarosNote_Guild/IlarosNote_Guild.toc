@@ -1,0 +1,14 @@
+## Interface: 30305
+## Title: IlarosNote_Guild
+## Author: Ilaros
+## Version: 1.000
+## Notes: Liste mit Gildenplätzen auf der Landkarte
+## DefaultState: enabled
+## RequiredDeps: IlarosNote
+## SavedVariables: IlarosNote_GuildDB
+
+libs\LibGuildPositions-1.0\lib.xml
+libs\AceTimer-3.0\AceTimer-3.0.xml
+libs\AceBucket-3.0\AceBucket-3.0.xml
+
+GuildNotes.lua

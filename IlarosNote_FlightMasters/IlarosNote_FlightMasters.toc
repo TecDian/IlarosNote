@@ -1,0 +1,19 @@
+﻿## Interface: 30305
+## Title: IlarosNote_FlightMasters
+## Author: Ilaros
+## Version: 1.000
+## Notes: Liste mit Flugmeistern auf der Landkarte
+## DefaultState: enabled
+## RequiredDeps: IlarosNote
+## SavedVariables: IlarosNote_FlightMastersDB
+
+Locales\Locale-enUS.lua
+Locales\Locale-deDE.lua
+Locales\Locale-esES.lua
+Locales\Locale-frFR.lua
+Locales\Locale-koKR.lua
+Locales\Locale-ruRU.lua
+Locales\Locale-zhCN.lua
+Locales\Locale-zhTW.lua
+
+IlarosNote_FlightMasters.lua
