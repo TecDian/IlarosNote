@@ -1,34 +1,41 @@
-﻿## Interface: 30305
+## Interface: 30305
 ## Title: IlarosNote
 ## Author: Ilaros
-## Version: 1.000
+## Version: 1.001
 ## Notes: Notizen auf der Landkarte
 ## DefaultState: enabled
 ## OptionalDeps: IlarosNavi
-## SavedVariables: IlarosNoteDB, IlarosNote_IlarosNoteDB
+## SavedVariables: NoteConfig, NoteMarks, NoteCities, NoteDirects, NoteFlights, NoteGhosts, NoteGuilds, NoteMails, NoteTrainers, NoteVendors
+## SavedVariablesPerCharacter: NoteDeaths
 
-Libs\LibStub\LibStub.lua
-Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
-Libs\AceAddon-3.0\AceAddon-3.0.xml
-Libs\AceEvent-3.0\AceEvent-3.0.xml
-Libs\AceDB-3.0\AceDB-3.0.xml
-Libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
-Libs\AceLocale-3.0\AceLocale-3.0.xml
-Libs\AceGUI-3.0\AceGUI-3.0.xml
-Libs\AceConsole-3.0\AceConsole-3.0.xml
-Libs\AceConfig-3.0\AceConfig-3.0.xml
-Libs\AceHook-3.0\AceHook-3.0.xml
-Libs\Astrolabe\Load.xml
+libs\Astrolabe\Load.xml
+libs\LibStub\LibStub.lua
+libs\LibGuildPositions-1.0\lib.xml
+libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+libs\AceAddon-3.0\AceAddon-3.0.xml
+libs\AceGUI-3.0\AceGUI-3.0.xml
+libs\AceBucket-3.0\AceBucket-3.0.xml
+libs\AceConfig-3.0\AceConfig-3.0.xml
+libs\AceConsole-3.0\AceConsole-3.0.xml
+libs\AceDB-3.0\AceDB-3.0.xml
+libs\AceDBOptions-3.0\AceDBOptions-3.0.xml
+libs\AceEvent-3.0\AceEvent-3.0.xml
+libs\AceHook-3.0\AceHook-3.0.xml
+libs\AceLocale-3.0\AceLocale-3.0.xml
+libs\AceTimer-3.0\AceTimer-3.0.xml
 
-Locales\Locale-enUS.lua
-Locales\Locale-deDE.lua
-Locales\Locale-esES.lua
-Locales\Locale-frFR.lua
-Locales\Locale-koKR.lua
-Locales\Locale-ruRU.lua
-Locales\Locale-zhCN.lua
-Locales\Locale-zhTW.lua
+IlarosNote_Loc.enUS.lua
+IlarosNote_Loc.deDE.lua
 
 IlarosNote.lua
-IlarosNote_IlarosNote.lua
-IlarosNote_EditFrame.lua
+IlarosNote_Mark.lua
+IlarosNote_Edit.lua
+
+IlarosNote_City.lua
+IlarosNote_Death.lua
+IlarosNote_Direct.lua
+IlarosNote_Flight.lua
+IlarosNote_Guild.lua
+IlarosNote_Mail.lua
+IlarosNote_Trainer.lua
+IlarosNote_Vendor.lua

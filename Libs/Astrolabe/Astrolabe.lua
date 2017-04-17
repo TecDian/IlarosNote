@@ -1,7 +1,7 @@
 --[[
 Name: Astrolabe
 Revision: $Rev: 107 $
-$Date: 2009-08-05 07:34:29 +0000 (Wed, 05 Aug 2009) $
+$Date: 2009-08-05 08:34:29 +0100 (Wed, 05 Aug 2009) $
 Author(s): Esamynn (esamynn at wowinterface.com)
 Inspired By: Gatherer by Norganna
              MapLibrary by Kristofer Karlsson (krka at kth.se)
