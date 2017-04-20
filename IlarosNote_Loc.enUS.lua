@@ -106,22 +106,17 @@ L["Create waypoint"] = true      -- only available with IlarosNavi or Cartoghrap
 L["Close"] = true
 
 -- Modul IlarosNote_Death
-L["Charon"] = "Deathblow"
 L["Death"] = "Death"
 L["Spirit Healer"] = "Spirit Healer"
 L["Graveyard"] = "Graveyard"
 -- Options dialog
-L["These settings control the look and feel of the Deathblow icons."] = true
 L["Spirit Healer icons"] = true
 L["Death icons"] = true
 -- Optionenfilter
 L["Filters"] = true
 L["World Map Filter"] = true
 L["Minimap Filter"] = true
--- Kontextmenü an Notiz auf der Weltkarte
-L["IlarosNote - Deathblow"] = true   -- title for the right-click menu
 -- Death types
-L["DEATH_ERROR"] = "Error"
 L["DEATH_UNKNOWN"] = "Death"
 L["DEATH_SWING"] = "Melee Death"
 L["DEATH_RANGE"] = "Range Death"
@@ -248,8 +243,9 @@ L[": East"] = true
 L[": West"] = true
 
     -- Chat-Benachrichtigungen
-    NoteText_FName       = "|cffffff00IlarosNote for Tec's Ilaros WoW|r"
-    NoteText_FVer        = "|cffffff00Version %s|r"
+    NoteText_PRFX   = "|cffffff78IlarosNote: |r"
+    NoteText_FName  = "|cffffff00IlarosNote for Tec's Ilaros WoW|r"
+    NoteText_FVer   = "|cffffff00Version %s|r"
     -- Chat-Hilfetexte
     NoteText_SLASH  = "|cffff38ffIlarosNote Commands:|r"
     NoteText_VER    = "|cffffff78/Note v|r - Version information"
@@ -257,3 +253,29 @@ L[": West"] = true
     NoteText_NOTE1  = "|cffffff78/Note h|r - Add a note at current position"
     NoteText_NOTE2  = "|cffffff78/Note <x> <y>|r - Add a note at x,y"
     NoteText_USLASH = "|cffff1f1fThis command is unknown.|r"
+
+    -- Modul IlarosNote_Death
+    NoteText_CNF2   = "Deathblow"
+    NoteText_SPHL   = "Spirit Healer"
+    NoteText_CRPS   = "Corpse"
+    -- Optionsdialog
+    NoteText_ODN2   = "These settings control the look and feel of the Deathblow icons."
+    -- Kontextmenü an Notiz auf der Weltkarte
+    NoteText_CMW2   = "IlarosNote - Deathblow"
+    -- Warnungen und Fehler
+    NoteText_WRN2A  = "Warning! Wrong state for finding location of %s!"
+    NoteText_WRN2B  = "|cffffff78IlarosNote:|r |cffff4f00Warning!|r Unknown NoteDeath database version. Please update to newer version."
+    NoteText_WRN2C  = "|cffffff78IlarosNote:|r |cffff4f00Warning!|r Addon has been disabled to protect your NoteDeath database."
+    NoteText_WRN2D  = "Dead on login. Ignoring."
+    NoteText_WRN2E  = "Starting DB upgrade to version 2."
+    NoteText_WRN2F  = "Upgrade to DB version 2 complete."
+    NoteText_ERR2A  = "Error"
+    NoteText_ERR2B  = "Error! Spirit Healer not found!"
+    NoteText_ERR2C  = "Error! \"UpdateSpiritNote\" failed!"
+    NoteText_ERR2D  = "Error! Map file of Spirit Healer not found!"
+    NoteText_ERR2E  = "Error! \"UpdateCorpseNote\" failed!"
+    NoteText_ERR2F  = "Error! Corpse not yet detected!"
+    NoteText_ERR2G  = "Error! Map file of Corpse not found!"
+    NoteText_ERR2H  = "Error! Spirit healer on different continent: '"
+    NoteText_ERR2I  = "' from corpse: '"
+    NoteText_ERR2J  = "Error! Spirit healer coordinates translation failed!"

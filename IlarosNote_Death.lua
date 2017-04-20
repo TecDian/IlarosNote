@@ -2,31 +2,20 @@
 -- IlarosNote
 -- Modul für Todesfälle und Geistheiler
 ----------------------------------------------------------------------------
---[[
-TODO:
-    - Icons
-        http://wowcompares.com/03010805/FrameXML/WorldMapFrame.lua
-        QUEST_ICON_TEXTURES[QUEST_ICON_KILL]                = "Interface\\WorldMap\\Skull_64"
-        QUEST_ICON_TEXTURES[QUEST_ICON_KILL_COLLECT]        = "Interface\\WorldMap\\GlowSkull_64"
-        QUEST_ICON_TEXTURES[QUEST_ICON_INTERACT]            = "Interface\\WorldMap\\Gear_64"
-        QUEST_ICON_TEXTURES[QUEST_ICON_TURN_IN]             = "Interface\\WorldMap\\QuestionMark_Gold_64"
-        QUEST_ICON_TEXTURES[QUEST_ICON_CHAT]                = "Interface\\WorldMap\\ChatBubble_64"
-        QUEST_ICON_TEXTURES[QUEST_ICON_X_MARK]              = "Interface\\WorldMap\\X_Mark_64"
-        QUEST_ICON_TEXTURES[QUEST_ICON_BIG_SKULL]           = "Interface\\WorldMap\\3DSkull_64"
-        QUEST_ICON_TEXTURES[QUEST_ICON_BIG_SKULL_GEAR]      = "Interface\\WorldMap\\SkullGear_64"
-    - Icon colors
-    - Filters
-    - Global death point to detect Graveyard influence area
-    - Log monster
-        - level,
-        - type (Beast, Demon, ...),
-        - class for Humanoids (paladin, rogue, ...)
-        - rarity (normal, elite, boss, rare, rare-elite)
-        - standing (friend, neutral, enemy)
-    - Log Player state on death? (items, buffs, ...)
-    - use Damage SourceFlags and try to determine if it was PVP or PVE
-]]
----------------------------------------------------------
+-- Verbesserungsmöglichkeiten:
+-- Iconfarben entsprechend Todesart
+-- als Vorlage nutzbar:
+--    QUEST_ICON_TEXTURES[QUEST_ICON_KILL]                = "Interface\\WorldMap\\Skull_64"
+--    QUEST_ICON_TEXTURES[QUEST_ICON_KILL_COLLECT]        = "Interface\\WorldMap\\GlowSkull_64"
+--    QUEST_ICON_TEXTURES[QUEST_ICON_INTERACT]            = "Interface\\WorldMap\\Gear_64"
+--    QUEST_ICON_TEXTURES[QUEST_ICON_TURN_IN]             = "Interface\\WorldMap\\QuestionMark_Gold_64"
+--    QUEST_ICON_TEXTURES[QUEST_ICON_CHAT]                = "Interface\\WorldMap\\ChatBubble_64"
+--    QUEST_ICON_TEXTURES[QUEST_ICON_X_MARK]              = "Interface\\WorldMap\\X_Mark_64"
+--    QUEST_ICON_TEXTURES[QUEST_ICON_BIG_SKULL]           = "Interface\\WorldMap\\3DSkull_64"
+--    QUEST_ICON_TEXTURES[QUEST_ICON_BIG_SKULL_GEAR]      = "Interface\\WorldMap\\SkullGear_64"
+-- Anzeige-Filter in den Optionen für Todesarten und Geistheiler
+----------------------------------------------------------------------------
+
 -- Addon declaration
 IlarosNote_Death = LibStub("AceAddon-3.0"):NewAddon("IlarosNote_Death","AceEvent-3.0", "AceTimer-3.0")
 local HC = IlarosNote_Death
@@ -124,7 +113,7 @@ local function deletePin(button, type_mapFile, coord)
         return
     end
 
-    HC:SendMessage("IlarosNote_NotifyUpdate", "Charon")
+    HC:SendMessage("IlarosNote_NotifyUpdate", "IlarosNote_Death")
 end
 local function createWaypoint(button, type_mapFile, coord)
     local type, mapFile = strsplit(":", type_mapFile)
@@ -174,7 +163,7 @@ local function generateMenu(button, level)
     if (level == 1) then
         -- Create the title of the menu
         info.isTitle      = 1
-        info.text         = L["IlarosNote - Charon"]
+        info.text         = NoteText_CMW2
         info.notCheckable = 1
         UIDropDownMenu_AddButton(info, level)
 
@@ -339,7 +328,6 @@ function HCHandler:OnEnter(mapFile, coord)
         tooltip:AddLine(data)
     end
 
---  tooltip:AddLine(L["Charon"])
     tooltip:Show()
 end
 
@@ -418,16 +406,16 @@ end
 
 local options = {
     type = "group",
-    name = L["Charon"],
-    desc = L["Charon"],
+    name = NoteText_CNF2,
+    desc = NoteText_CNF2,
     get = function(info) return db.profile[info.arg] end,
     set = function(info, v)
         db.profile[info.arg] = v
-        HC:SendMessage("IlarosNote_NotifyUpdate", "Charon")
+        HC:SendMessage("IlarosNote_NotifyUpdate", "IlarosNote_Death")
     end,
     args = {
         desc = {
-            name = L["These settings control the look and feel of the Charon icons."],
+            name = NoteText_ODN2,
             type = "description",
             order = 0,
         },
@@ -456,7 +444,7 @@ local options = {
             get = function(info, k) return db.profile.filter[k] end,
             set = function(info, k, v)
                 db.profile.filter[k] = v
-                HC:SendMessage("IlarosNote_NotifyUpdate", "Charon")
+                HC:SendMessage("IlarosNote_NotifyUpdate", "IlarosNote_Death")
             end,
             values = GetVFilters(),
 
@@ -517,16 +505,16 @@ local QUALITY_API = 7 -- from its respective API
 local LOC_MAX_RETRIES = 15 * 5 -- 15 seconds
 local LOC_RETRY_DELAY = 0.2 -- one fifth of the second
 
-local CharonData
+local DeathData
 
 local function NoteUpdateHelper(target)
-    --print("NoteUpdateHelper: Spirit: " .. CharonData.Spirit.Quality .. " ? " .. CharonData.Spirit.NoteQuality .. " Corpse: " .. CharonData.Corpse.Quality .. " ? " .. CharonData.Corpse.NoteQuality .. " S: " .. CharonData.Corpse.SpiritQuality)
+    --print("NoteUpdateHelper: Spirit: " .. DeathData.Spirit.Quality .. " ? " .. DeathData.Spirit.NoteQuality .. " Corpse: " .. DeathData.Corpse.Quality .. " ? " .. DeathData.Corpse.NoteQuality .. " S: " .. DeathData.Corpse.SpiritQuality)
     local isUpdate = false
-    if (CharonData.Spirit.Quality > CharonData.Spirit.NoteQuality) then
+    if (DeathData.Spirit.Quality > DeathData.Spirit.NoteQuality) then
         --print("HC:UpdateSpiritNote")
         isUpdate = HC:UpdateSpiritNote(target) or isUpdate
     end
-    if (CharonData.Corpse.Quality > CharonData.Corpse.NoteQuality) or ((CharonData.Spirit.Quality > CharonData.Corpse.SpiritQuality) and (CharonData.Corpse.Quality > QUALITY_NONE)) then
+    if (DeathData.Corpse.Quality > DeathData.Corpse.NoteQuality) or ((DeathData.Spirit.Quality > DeathData.Corpse.SpiritQuality) and (DeathData.Corpse.Quality > QUALITY_NONE)) then
         --print("HC:UpdateCorpseNote")
         isUpdate = HC:UpdateCorpseNote(target) or isUpdate
     end
@@ -537,7 +525,7 @@ local function NoteUpdateHelper(target)
     --print("NoteUpdateHelper END")
 end
 
-CharonData = {
+DeathData = {
     State = STATE_NONE,
     PlayerGuid = nil,
     DeadOnLogin = false, -- isn't STATE_ALIVE enough to ignore the death?
@@ -552,7 +540,7 @@ CharonData = {
         Func = GetCorpseMapPosition,
         FuncState = STATE_GHOST,
         RetryCount = 0,
-        Name = "Corpse",
+        Name = NoteText_CRPS,
         NoteCoords = nil,
         NoteQuality = QUALITY_NONE,
         NoteUpdate = NoteUpdateHelper,
@@ -569,7 +557,7 @@ CharonData = {
         Func = GetDeathReleasePosition,
         FuncState = STATE_DEAD,
         RetryCount = 0,
-        Name = "Spirit Healer",
+        Name = NoteText_SPHL,
         NoteCoords = nil,
         NoteQuality = QUALITY_NONE,
         NoteUpdate = NoteUpdateHelper,
@@ -585,30 +573,30 @@ CharonData = {
     },
 }
 
-function HC:ClearCharonData()
-    --print("ClearCharonData")
-    CharonData.State = STATE_ALIVE
+function HC:ClearDeathData()
+    --print("ClearDeathData")
+    DeathData.State = STATE_ALIVE
 
-    --CharonData.Corpse.Continent = -1
-    CharonData.Corpse.Quality = QUALITY_NONE
-    CharonData.Corpse.NoteCoords = nil
-    CharonData.Corpse.NoteQuality = QUALITY_NONE
-    CharonData.Corpse.SpiritQuality = QUALITY_NONE
-    CharonData.Corpse.RetryCount = 0
+    --DeathData.Corpse.Continent = -1
+    DeathData.Corpse.Quality = QUALITY_NONE
+    DeathData.Corpse.NoteCoords = nil
+    DeathData.Corpse.NoteQuality = QUALITY_NONE
+    DeathData.Corpse.SpiritQuality = QUALITY_NONE
+    DeathData.Corpse.RetryCount = 0
 
-    --CharonData.Spirit.Continent = -1
-    CharonData.Spirit.Quality = QUALITY_NONE
-    CharonData.Spirit.NoteCoords = nil
-    CharonData.Spirit.NoteQuality = QUALITY_NONE
-    CharonData.Spirit.RetryCount = 0
+    --DeathData.Spirit.Continent = -1
+    DeathData.Spirit.Quality = QUALITY_NONE
+    DeathData.Spirit.NoteCoords = nil
+    DeathData.Spirit.NoteQuality = QUALITY_NONE
+    DeathData.Spirit.RetryCount = 0
 
-    CharonData.Event.Time = nil
-    CharonData.Event.DeathTime = 0
-    CharonData.Event.Type = "U"
-    CharonData.Event.Source = ""
-    CharonData.Event.SourceGuid = nil
-    CharonData.Event.Data = ""
-    --print("ClearCharonData END")
+    DeathData.Event.Time = nil
+    DeathData.Event.DeathTime = 0
+    DeathData.Event.Type = "U"
+    DeathData.Event.Source = ""
+    DeathData.Event.SourceGuid = nil
+    DeathData.Event.Data = ""
+    --print("ClearDeathData END")
 end
 
 function HC:SetCurrentPosition(target)
@@ -634,8 +622,8 @@ function HC:SetCurrentPosition(target)
 end
 
 function HC:FindLocation(target)
-    if CharonData.State ~= target.FuncState then
-        self:print("Warning: Wrong state for finding location of " .. target.Name)
+    if DeathData.State ~= target.FuncState then
+        self:print(string.format(NoteText_WRN2A, target.Name))
         return false
     end
 
@@ -674,9 +662,9 @@ end
 -- STATE_ALIVE
 function HC:PlayerAlive()
 --  self:print("We are alive!")
-    CharonData.State = STATE_ALIVE
-    CharonData.DeadOnLogin = false
-    self:ClearCharonData()
+    DeathData.State = STATE_ALIVE
+    DeathData.DeadOnLogin = false
+    self:ClearDeathData()
 end
 
 -- STATE_DEAD
@@ -684,10 +672,10 @@ function HC:PlayerDied()
 -- GetDeathReleasePosition OK
 -- GetCorpseMapPosition xx
 --  self:print("We are dead!")
-    CharonData.State = STATE_DEAD
-    CharonData.Event.DeathTime = time()
-    self:FindLocation(CharonData.Spirit)
-    self:SetCurrentPosition(CharonData.Corpse)
+    DeathData.State = STATE_DEAD
+    DeathData.Event.DeathTime = time()
+    self:FindLocation(DeathData.Spirit)
+    self:SetCurrentPosition(DeathData.Corpse)
 end
 
 -- STATE_GHOST
@@ -695,62 +683,62 @@ function HC:GhostReleased()
 -- GetDeathReleasePosition xx
 -- GetCorpseMapPosition OK
 --  self:print("We are ghost!")
-    CharonData.State = STATE_GHOST
-    --self:SetCurrentPosition(CharonData.Spirit)
-    if CharonData.Spirit.Quality ~= QUALITY_API then
-        self:print("Error: Spirit Healer not found!");
+    DeathData.State = STATE_GHOST
+    --self:SetCurrentPosition(DeathData.Spirit)
+    if DeathData.Spirit.Quality ~= QUALITY_API  then
+        self:print(NoteText_ERR2B);
     end
-    self:FindLocation(CharonData.Corpse)
+    self:FindLocation(DeathData.Corpse)
 end
 
 function HC:NotifyIlarosNote(target)
-    self:SendMessage("IlarosNote_NotifyUpdate", "Charon")
+    self:SendMessage("IlarosNote_NotifyUpdate", "IlarosNote_Death")
 end
 
 function HC:UpdateSpiritNote(target)
     --self:print("UpdateSpiritNote");
-    if (CharonData.Spirit.Quality <= CharonData.Spirit.NoteQuality) then
-        self:print("Error: UpdateSpiritNote failed!");
+    if (DeathData.Spirit.Quality <= DeathData.Spirit.NoteQuality) then
+        self:print(NoteText_ERR2C);
         return false
     end
 
-    local Smap = CharonData.Spirit.Map
+    local Smap = DeathData.Spirit.Map
     if (not Smap) then
-        self:print("Error: Map file of Spirit Healer not found!");
+        self:print(NoteText_ERR2D);
         return false
     end
 
-    if (CharonData.Spirit.NoteCoords ~= nil) and (CharonData.Spirit.NoteCoords ~= CharonData.Spirit.Coords) then
+    if (DeathData.Spirit.NoteCoords ~= nil) and (DeathData.Spirit.NoteCoords ~= DeathData.Spirit.Coords) then
         -- TODO: analyze the old note
         --self:print("UpdateSpiritNote MOVE");
-        db.factionrealm.nodes[Smap][CharonData.Spirit.NoteCoords] = nil
+        db.factionrealm.nodes[Smap][DeathData.Spirit.NoteCoords] = nil
     end
 
-    CharonData.Spirit.NoteCoords = CharonData.Spirit.Coords
-    CharonData.Spirit.NoteQuality = CharonData.Spirit.Quality
+    DeathData.Spirit.NoteCoords = DeathData.Spirit.Coords
+    DeathData.Spirit.NoteQuality = DeathData.Spirit.Quality
 
-    --self:print("SpiritNote: " .. Smap .. "[" .. CharonData.Spirit.NoteCoords .. "]: " .. "H")
-    db.factionrealm.nodes[Smap][CharonData.Spirit.NoteCoords] = "H"
+    --self:print("SpiritNote: " .. Smap .. "[" .. DeathData.Spirit.NoteCoords .. "]: " .. "H")
+    db.factionrealm.nodes[Smap][DeathData.Spirit.NoteCoords] = "H"
 
     return true
 end
 
 function HC:UpdateCorpseNote(target)
     --self:print("UpdateCorpseNote");
-    if (CharonData.Corpse.Quality <= CharonData.Corpse.NoteQuality) and (CharonData.Spirit.Quality <= CharonData.Corpse.SpiritQuality) then
-        self:print("Error: UpdateCorpseNote failed!");
+    if (DeathData.Corpse.Quality <= DeathData.Corpse.NoteQuality) and (DeathData.Spirit.Quality <= DeathData.Corpse.SpiritQuality) then
+        self:print(NoteText_ERR2E);
         return false
     end
 
-    if (CharonData.Corpse.Quality <= QUALITY_NONE) then
-        self:print("Error: Corpse not yet detected!");
+    if (DeathData.Corpse.Quality <= QUALITY_NONE) then
+        self:print(NoteText_ERR2F);
         return false
     end
 
-    local Cmap = CharonData.Corpse.Map
+    local Cmap = DeathData.Corpse.Map
 
     if (not Cmap) or (Cmap == "") then
-        self:print("Error: Map file of Corpse not found!");
+        self:print(NoteText_ERR2G);
         return false
     end
 
@@ -758,45 +746,45 @@ function HC:UpdateCorpseNote(target)
         CharDB.nodes[Cmap] = {}
     end
 
-    if (CharonData.Corpse.NoteCoords ~= nil) and (CharonData.Corpse.NoteCoords ~= CharonData.Corpse.Coords) then
-        -- TODO: analyze the old note
+    if (DeathData.Corpse.NoteCoords ~= nil) and (DeathData.Corpse.NoteCoords ~= DeathData.Corpse.Coords) then
+        -- fehlt: alte Notiz analysieren
         --self:print("UpdateCorpseNote MOVE");
-        CharDB.nodes[Cmap][CharonData.Corpse.NoteCoords] = nil
+        CharDB.nodes[Cmap][DeathData.Corpse.NoteCoords] = nil
     end
 
     local SpiritCoords
-    if (CharonData.Spirit.Quality > QUALITY_NONE) then
+    if (DeathData.Spirit.Quality > QUALITY_NONE) then
 
-        if CharonData.Corpse.Continent ~= CharonData.Spirit.Continent then
-            self:print("Error: Spirit healer on different continent: '" .. (select(CharonData.Spirit.Continent, GetMapContinents()) or "nil") .. "' from corpse: '" .. (select(CharonData.Corpse.Continent, GetMapContinents()) or "nil") .. "'");
+        if DeathData.Corpse.Continent ~= DeathData.Spirit.Continent then
+            self:print(NoteText_ERR2H .. (select(DeathData.Spirit.Continent, GetMapContinents()) or "nil") .. NoteText_ERR2I .. (select(DeathData.Corpse.Continent, GetMapContinents()) or "nil") .. "'");
             return false
         end
 
-        if (CharonData.Corpse.ZoneId ~= CharonData.Spirit.ZoneId) then
-            local Tx, Ty = Astrolabe:TranslateWorldMapPosition(CharonData.Spirit.Continent, CharonData.Spirit.ZoneId, CharonData.Spirit.X, CharonData.Spirit.Y, CharonData.Corpse.Continent, CharonData.Corpse.ZoneId)
+        if (DeathData.Corpse.ZoneId ~= DeathData.Spirit.ZoneId) then
+            local Tx, Ty = Astrolabe:TranslateWorldMapPosition(DeathData.Spirit.Continent, DeathData.Spirit.ZoneId, DeathData.Spirit.X, DeathData.Spirit.Y, DeathData.Corpse.Continent, DeathData.Corpse.ZoneId)
             if not Tx then
-                self:print("Error: Spirit healer coordinates translation failed!");
+                self:print(NoteText_ERR2J);
                 --return false
                 SpiritCoords = nil
             else
                 SpiritCoords = IlarosNote:getCoord(Tx, Ty)
             end
         else
-            SpiritCoords = CharonData.Spirit.Coords
+            SpiritCoords = DeathData.Spirit.Coords
         end
 
     end
 
-    local SourceFlags = bit_and(CharonData.Event.SourceFlags, 0xffff)
-    local deathtime = CharonData.Event.Time or CharonData.Event.DeathTime
-    local CInfo = CharonData.Event.Type .. ":" .. deathtime .. ":" .. CharonData.Event.Source .. ":" .. (SpiritCoords or "").. ":" .. (CharonData.Event.SourceGuid or "") .. ":" .. SourceFlags .. ":" .. (CharonData.Event.Data or "")
+    local SourceFlags = bit_and(DeathData.Event.SourceFlags, 0xffff)
+    local deathtime = DeathData.Event.Time or DeathData.Event.DeathTime
+    local CInfo = DeathData.Event.Type .. ":" .. deathtime .. ":" .. DeathData.Event.Source .. ":" .. (SpiritCoords or "").. ":" .. (DeathData.Event.SourceGuid or "") .. ":" .. SourceFlags .. ":" .. (DeathData.Event.Data or "")
 
-    CharonData.Corpse.NoteCoords = CharonData.Corpse.Coords
-    CharonData.Corpse.NoteQuality = CharonData.Corpse.Quality
-    CharonData.Corpse.SpiritQuality = CharonData.Spirit.Quality
+    DeathData.Corpse.NoteCoords = DeathData.Corpse.Coords
+    DeathData.Corpse.NoteQuality = DeathData.Corpse.Quality
+    DeathData.Corpse.SpiritQuality = DeathData.Spirit.Quality
 
-    --self:print("CorpseNote: " .. Cmap .. "[" .. CharonData.Corpse.NoteCoords .. "]: " .. CInfo)
-    CharDB.nodes[Cmap][CharonData.Corpse.NoteCoords] = CInfo
+    --self:print("CorpseNote: " .. Cmap .. "[" .. DeathData.Corpse.NoteCoords .. "]: " .. CInfo)
+    CharDB.nodes[Cmap][DeathData.Corpse.NoteCoords] = CInfo
 
     return true
 end
@@ -806,7 +794,7 @@ function HC:OnInitialize()
     -- Set up our database
     db = LibStub("AceDB-3.0"):New("NoteGhosts", defaults)
     self.db = db
-    self.data = CharonData
+    self.data = DeathData
 
     if not NoteDeaths then
         NoteDeaths = {
@@ -818,8 +806,8 @@ function HC:OnInitialize()
 
 
     if (db.factionrealm.dbversion > CURRENT_DB_VERSION) or (CharDB.dbversion > CURRENT_DB_VERSION) then
-        print("|cff6fafffIlarosNote_Death:|r |cffff4f00Warning:|r Unknown database version. Please update to newer version.")
-        print("|cff6fafffIlarosNote_Death:|r |cffff4f00Warning:|r Addon has been disabled to protect your database.")
+        print(NoteText_WRN2B)
+        print(NoteText_WRN2C)
         self:Disable()
         return
     end
@@ -842,12 +830,12 @@ function HC:OnInitialize()
         end
         if CharDB.dbversion == 1 then
             -- add SourceFlags
-            self:print("Starting DB upgrade to version 2")
-            tinsert(log, "Starting DB upgrade to version 2")
+            self:print(NoteText_WRN2E)
+            tinsert(log, NoteText_WRN2E)
             -- upgrade code removed in commit 29 as nobody but me used the version 1 DB
             CharDB.dbversion = 2
-            self:print("Upgrade to DB version 2 complete");
-            tinsert(log, "Upgrade to DB version 2 complete");
+            self:print(NoteText_WRN2F);
+            tinsert(log, NoteText_WRN2F);
         end
     end
 
@@ -857,17 +845,17 @@ function HC:OnInitialize()
     CharDB.dbversion = CURRENT_DB_VERSION
 
     -- Initialize our database with IlarosNote
-    IlarosNote:RegisterPluginDB("Charon", HCHandler, options)
+    IlarosNote:RegisterPluginDB("IlarosNote_Death", HCHandler, options)
 end
 
 
 
 function HC:OnEnable()
 
-    CharonData.PlayerGuid = UnitGUID("player")
-    CharonData.DeadOnLogin = UnitIsDeadOrGhost("player")
+    DeathData.PlayerGuid = UnitGUID("player")
+    DeathData.DeadOnLogin = UnitIsDeadOrGhost("player")
 
-    self:ClearCharonData()
+    self:ClearDeathData()
 
 --  self:RegisterEvent("AREA_SPIRIT_HEALER_IN_RANGE")     -- ??
 --  self:RegisterEvent("AREA_SPIRIT_HEALER_OUT_OF_RANGE") -- ??
@@ -892,7 +880,7 @@ end
 
 function HC:print(text)
     if DEFAULT_CHAT_FRAME then
-        DEFAULT_CHAT_FRAME:AddMessage("|cffffff7fCharon: |r"..text)
+        DEFAULT_CHAT_FRAME:AddMessage(NoteText_PRFX..text)
     end
 end
 
@@ -911,64 +899,64 @@ function HC:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
     local type = select(2, ...)
     local destGuid = select(6, ...)
 
-    if (destGuid ~= CharonData.PlayerGuid) then
+    if (destGuid ~= DeathData.PlayerGuid) then
         return;
     end
 
 
     if (type == "SWING_DAMAGE") then
-        CharonData.Event.Time = select(1, ...)
-        CharonData.Event.Type = "M"
-        CharonData.Event.Source = select(4, ...)
-        CharonData.Event.SourceGuid = select(3, ...)
-        CharonData.Event.SourceFlags = select(5, ...)
+        DeathData.Event.Time = select(1, ...)
+        DeathData.Event.Type = "M"
+        DeathData.Event.Source = select(4, ...)
+        DeathData.Event.SourceGuid = select(3, ...)
+        DeathData.Event.SourceFlags = select(5, ...)
 
     -- Let's make all the combat log events same:
     -- spellId = nil
     -- spallName = "Swing"
     -- spellSchool = 1 (PHYSICAL)
 
-        CharonData.Event.Data = "\\Swing\\1\\" .. mystrjoin("\\", 9, ...)
+        DeathData.Event.Data = "\\Swing\\1\\" .. mystrjoin("\\", 9, ...)
 
 
     elseif (type == "RANGE_DAMAGE") or (type == "SPELL_DAMAGE") or (type == "SPELL_PERIODIC_DAMAGE") then
-        CharonData.Event.Time = select(1, ...)
+        DeathData.Event.Time = select(1, ...)
 
         if (type == "RANGE_DAMAGE") then
-            CharonData.Event.Type = "R"
+            DeathData.Event.Type = "R"
         elseif (type == "SPELL_DAMAGE") then
-            CharonData.Event.Type = "S"
+            DeathData.Event.Type = "S"
         elseif (type == "SPELL_PERIODIC_DAMAGE") then
-            CharonData.Event.Type = "P"
+            DeathData.Event.Type = "P"
         else
-            CharonData.Event.Type = "U"
+            DeathData.Event.Type = "U"
         end
 
-        CharonData.Event.Source = select(4, ...)
-        CharonData.Event.SourceGuid = select(3, ...)
-        CharonData.Event.SourceFlags = select(5, ...)
+        DeathData.Event.Source = select(4, ...)
+        DeathData.Event.SourceGuid = select(3, ...)
+        DeathData.Event.SourceFlags = select(5, ...)
 
     -- Let's make all the combat log events same:
     -- spellId = spellId (9th param)
     -- spallName = spallName (10th param)
     -- spellSchool = spellSchool (11th param)
 
-        CharonData.Event.Data = mystrjoin("\\", 9, ...)
+        DeathData.Event.Data = mystrjoin("\\", 9, ...)
 
 
     elseif (type == "ENVIRONMENTAL_DAMAGE") then
-        CharonData.Event.Time = select(1, ...)
-        CharonData.Event.Type = "E"
-        CharonData.Event.Source = select(9, ...)
-        CharonData.Event.SourceGuid = select(3, ...)
-        CharonData.Event.SourceFlags = select(5, ...)
+        DeathData.Event.Time = select(1, ...)
+        DeathData.Event.Type = "E"
+        DeathData.Event.Source = select(9, ...)
+        DeathData.Event.SourceGuid = select(3, ...)
+        DeathData.Event.SourceFlags = select(5, ...)
 
     -- Let's make all the combat log events same:
     -- spellId = nil
     -- spallName = "Environmental"
     -- spellSchool = environmentalType (9th param)
 
-        CharonData.Event.Data = "\\Environmental\\" .. mystrjoin("\\", 9, ...)
+        DeathData.Event.Data = "\\Environmental\\" .. mystrjoin("\\", 9, ...)
     else
         return;
     end
@@ -1014,8 +1002,8 @@ function HC:PLAYER_ALIVE()
 --  self:print("PLAYER_ALIVE")
     if UnitIsDeadOrGhost("player") then
         if select(2, IsInInstance()) ~= "pvp" and not IsActiveBattlefieldArena() then
-            if CharonData.DeadOnLogin then
-                self:print("Dead on login... ignoring")
+            if DeathData.DeadOnLogin then
+                self:print(NoteText_WRN2D)
                 return
             end
             self:GhostReleased()
@@ -1149,8 +1137,7 @@ end
 
 
 ------------------------------------------------------------------------------------------------------
--- The following function is from Daniel Stephens <iriel@vigilance-committee.org>
--- with reference to TaxiFrame.lua in Blizzard's UI and Graph-1.0 Ace2 library (by Cryect)
+-- reference to TaxiFrame.lua in Blizzard's UI and Graph-1.0 Ace2 library (by Cryect)
 local TAXIROUTE_LINEFACTOR = 128/126; -- Multiplying factor for texture coordinates
 local TAXIROUTE_LINEFACTOR_2 = TAXIROUTE_LINEFACTOR / 2; -- Half of that
 
@@ -1179,7 +1166,7 @@ function G:DrawLine(C, sx, sy, ex, ey, w, color, layer)
     local dx,dy = ex - sx, ey - sy;
     local cx,cy = (sx + ex) / 2, (sy + ey) / 2;
 
-    -- Normalize direction if necessary
+    -- eventuell Richtung normalisieren
     if (dx < 0) then
         dx,dy = -dx,-dy;
     end

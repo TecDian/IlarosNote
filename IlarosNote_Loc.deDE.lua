@@ -95,22 +95,17 @@ L["Create waypoint"] = "Wegpunkt erstellen"
 L["Close"] = "Schließen"
 
 -- Modul IlarosNote_Death
-L["Charon"] = "Todesfall"
 L["Death"] = "Tod"
 L["Spirit Healer"] = "Geistheiler"
 L["Graveyard"] = "Friedhof"
 -- Optionsdialog
-L["These settings control the look and feel of the Charon icons."] = "Diese Einstellungen steuern das Aussehen der Todesfall-Icons."
 L["Spirit Healer icons"] = "Geistheiler-Icons"
 L["Death icons"] = "Todes-Icons"
 -- Optionenfilter
 L["Filters"] = "Filter"
 L["World Map Filter"] = "Weltkarten-Filter"
 L["Minimap Filter"] = "Minikarten-Filter"
--- Kontextmenü an Notiz auf der Weltkarte
-L["IlarosNote - Charon"] = "IlarosNote - Todesfall"   -- title for the right-click menu
 -- Death types
-L["DEATH_ERROR"] = "Fehler"
 L["DEATH_UNKNOWN"] = "Tod"
 L["DEATH_SWING"] = "Nahkampftod"
 L["DEATH_RANGE"] = "Fernkampftod"
@@ -238,6 +233,7 @@ L[": West"] = ": West"
 
 if ( GetLocale() == "deDE" ) then
     -- Chat-Benachrichtigungen
+    NoteText_PRFX   = "|cffffff78IlarosNote: |r"
     NoteText_FName  = "|cffffff00IlarosNote für Tec's Ilaros WoW|r"
     NoteText_FVer   = "|cffffff00Version %s|r"
     -- Chat-Hilfetexte
@@ -247,4 +243,31 @@ if ( GetLocale() == "deDE" ) then
     NoteText_NOTE1  = "|cffffff78/Note h|r - Notiz am aktuellen Ort erzeugen"
     NoteText_NOTE2  = "|cffffff78/Note <x> <y>|r - Notiz bei x,y erzeugen"
     NoteText_USLASH = "|cffff1f1fDieses Kommando ist unbekannt.|r"
+
+    -- Modul IlarosNote_Death
+    NoteText_CNF2   = "Todesfall"
+    NoteText_SPHL   = "Geistheiler"
+    NoteText_CRPS   = "Leichnam"
+    -- Optionsdialog
+    NoteText_ODN2 = "Diese Einstellungen steuern das Aussehen der Todesfall-Icons."
+    -- Kontextmenü an Notiz auf der Weltkarte
+    NoteText_CMW2   = "IlarosNote - Todesfall"
+    -- Warnungen und Fehler
+    NoteText_WRN2A  = "Warnung! Falscher Zustand, um %s finden zu können!"
+    NoteText_WRN2B  = "|cffffff78IlarosNote:|r |cffff4f00Warnung!|r Unbekannte NoteDeath-Datenbank-Version. Bitte eine neuere Version installieren."
+    NoteText_WRN2C  = "|cffffff78IlarosNote:|r |cffff4f00Warnung!|r Das Addon wurde deaktiviert, um die NoteDeath-Datenbank zu schützen."
+    NoteText_WRN2D  = "Tot beim Login. Ignoriert."
+    NoteText_WRN2E  = "DB-Upgrade auf Version 2 gestartet."
+    NoteText_WRN2F  = "DB-Upgrade auf Version 2 abgeschlossen."
+    NoteText_ERR2A  = "Fehler"
+    NoteText_ERR2B  = "Fehler! Geistheiler nicht gefunden!"
+    NoteText_ERR2C  = "Fehler! \"UpdateSpiritNote\" misslungen!"
+    NoteText_ERR2D  = "Fehler! Kartendatei für Geistheiler nicht gefunden!"
+    NoteText_ERR2E  = "Fehler! \"UpdateCorpseNote\" misslungen!"
+    NoteText_ERR2F  = "Fehler! Leichnam noch nicht geortet!"
+    NoteText_ERR2G  = "Fehler! Kartendatei für Leichnam nicht gefunden!"
+    NoteText_ERR2H  = "Fehler! Geistheiler auf anderem Kontinent: '"
+    NoteText_ERR2I  = "' als Leichnam: '"
+    NoteText_ERR2J  = "Fehler! Übersetzung der Geistheiler-Koordinaten misslungen!"
+
 end

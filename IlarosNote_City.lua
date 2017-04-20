@@ -351,7 +351,7 @@ function HC:BATTLEFIELDS_SHOW()
     self:AddNPCNote("W")
 end
 
-function HC:CONFIRM_XP_LOSS() -- Spirit Healer tracking moved to IlarosNote_Charon
+function HC:CONFIRM_XP_LOSS() -- Spirit Healer tracking moved to IlarosNote_Death
 --  self:AddNPCNote("X")
 end
 
